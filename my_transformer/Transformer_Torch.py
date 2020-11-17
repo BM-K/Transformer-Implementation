@@ -50,13 +50,13 @@ def get_attn_pad_mask(seq_q, seq_k):
     batch_size, len_q = seq_q.size()
     batch_size, len_k = seq_k.size()
     # eq(zero) is PAD token
-    pad_attn_mask = seq_k.data.eq(0).unsqueeze(1)  # PAD = 0 이므로 eq(0)
+    pad_attn_mask = seq_k.data.eq(0).unsqueeze(1) 
     # batch_size x 1 x len_k(=len_q), one is masking
     return pad_attn_mask.expand(batch_size, len_q, len_k)  # batch_size x len_q x len_k
 
 def get_attn_subsequent_mask(seq):
     attn_shape = [seq.size(0), seq.size(1), seq.size(1)]
-    subsequent_mask = np.triu(np.ones(attn_shape), k=1)  # 상삼각행렬 반환
+    subsequent_mask = np.triu(np.ones(attn_shape), k=1) 
     subsequent_mask = torch.from_numpy(subsequent_mask).byte()
     return subsequent_mask
 
@@ -67,7 +67,7 @@ class ScaledDotProductAttention(nn.Module):
     def forward(self, Q, K, V, attn_mask):
         scores = torch.matmul(Q, K.transpose(-1, -2)) / np.sqrt(d_k)  # scores : [batch_size x n_heads x len_q(=len_k) x len_k(=len_q)
         scores.masked_fill_(attn_mask, -1e9)  # fills elements of self tensor with value where mask is one.
-        # padding 부분을 -1000000 처럼 큰 음수값을 할당하여 softmax 후 해당 값을 0으로 나오게 만들어야함.
+
         attn = nn.Softmax(dim=-1)(scores)
         context = torch.matmul(attn, V)
         return context, attn
