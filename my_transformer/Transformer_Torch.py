@@ -1,3 +1,5 @@
+# https://github.com/graykode/nlp-tutorial/tree/master/5-1.Transformer
+
 import numpy as np
 import torch
 import torch.nn as nn
